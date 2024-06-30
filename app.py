@@ -1,5 +1,7 @@
 import random
-from flask import Flask, render_template, request
+import requests
+import json
+from flask import Flask, render_template, request, redirect, url_for
 
 rsplist = ['가위', '바위', '보']  # 가위바위보 양식 맞는지 비교용
 regame = 'y'
@@ -14,25 +16,67 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
+@app.route("/result/", methods=['POST'])
+def result():
+    computer = rsplist[random.randint(0, 2)]
+    user = request.form['button']
+    if computer == user:
+        print('무승부 입니다')
+        reports['draw'] += 1
+        return render_template('result.html', data='draw')
+    elif rsplist[rsplist.index(user)-1] == computer:
+        print('사용자 승리!')
+        reports['win'] += 1
+        return render_template('result.html', data='win')
+    elif rsplist[rsplist.index(user)-2] == computer:
+        print('컴퓨터 승리!')
+        reports['lose'] += 1
+        return render_template('result.html', data='lose')
 
-@app.route("/rock/")  # 값 받고 계산해서 출력
-def rock():
-    button = request.args.get("button")
-    print(f'User selected: {button}')
-    return f'You selected: {button}'
 
-@app.route("/sissor/")  # 값 받고 계산해서 출력
-def sissor():
-    button = request.args.get("button")
-    print(f'User selected: {button}')
-    return f'You selected: {button}'
+# @app.route("/rock/", methods=['POST'])  # 값 받고 계산해서 출력
+# def rock():
+#     button = request.args.get("button")
+#     print(f'User selected: {button}')
+#     params = json.loads(request.get_data(), encoding='utf-8')
+#     return f'You selected: {button}'#redirect(url_for('result'))
 
-@app.route("/paper/")  # 값 받고 계산해서 출력
-def paper():
-    button = request.args.get("button")
-    print(f'User selected: {button}')
-    return f'You selected: {button}'
+# @app.route("/sissor/", methods=['POST'])  # 값 받고 계산해서 출력
+# def sissor():
+#     button = request.args.get("button")
+#     print(f'User selected: {button}')
+#     params = json.loads(request.get_data(), encoding='utf-8')
+#     return f'You selected: {button}'#redirect(url_for('result'))
 
+# @app.route("/paper/", methods=['POST'])  # 값 받고 계산해서 출력
+# def paper():
+#     button = request.args.get("button")
+#     print(f'User selected: {button}')
+#     # return f'You selected: {button}'#redirect(url_for('result', data = data))
+#     res = request.post("result", data=json.dumps(button))
+#     params = json.loads(request.get_data(), encoding='utf-8')
+#     return res.text
+
+
+#https://apt-info.github.io/%EA%B0%9C%EB%B0%9C/python-flask3-post/에서 따온거
+# @app.route('/handle_post', methods=['POST'])
+# def handle_post():
+#     params = json.loads(request.get_data(), encoding='utf-8')
+
+#     params_str = ''
+#     for key in params.keys():
+#         params_str += 'key: {}, value: {}<br>'.format(key, params[key])
+#     return params_str
+
+# @app.route('/send_post', methods=['GET'])
+# def send_post():
+#     params = {
+#         "param1": "test1",
+#         "param2": 123,
+#         "param3": "한글"
+#     }
+#     res = requests.post("http://127.0.0.1:5000/handle_post", data=json.dumps(params))
+#     return res.text
 
 if __name__ == "__main__":
     app.run(debug=True)

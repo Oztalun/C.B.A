@@ -5,18 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rsp_select</title>
+    <!-- <script>
+        function sendChoice(choice) {
+            const form = document.createElement('form'); // 폼 생성
+            form.method = 'POST'; // 폼의 메서드를 POST로 설정
+            form.action = '/result'; // 폼의 액션을 /result로 설정
+            
+            const input = document.createElement('input'); // input 요소 생성
+            input.type = 'hidden'; // input 타입을 hidden으로 설정
+            input.name = 'button'; // input의 이름을 button로 설정
+            input.value = choice; // input의 값을 함수의 인자로 설정된 choice로 설정
+            
+            form.appendChild(input); // input 요소를 폼에 추가
+            document.body.appendChild(form); // 폼을 body에 추가
+            form.submit(); // 폼 제출
+        }
+    </script> -->
 </head>
 
 <body>
-    <!-- url_for('함수이름') "함수 이름"이라는 함수가 파이썬에서 실행 + get으로 값을 받는다  -->
-    <form action="/sissor" method="GET">
-        <button type="submit" name="button" value="가위">가위</button>
+    <!-- <button onclick="sendChoice('가위')">가위</button>
+    <button onclick="sendChoice('바위')">바위</button>
+    <button onclick="sendChoice('보')">보</button> -->
+    <form action="/result" method="POST">
+        <button type="submit" name="button" id="button" value="가위">가위</button>
     </form>
-    <form action="/rock" method="GET">
-        <button type="submit" name="button" value="바위">바위</button>
+    <form action="/result" method="POST">
+        <button type="submit" name="button" id="button" value="바위">바위</button>
     </form>
-    <form action="/paper" method="GET">
-        <button type="submit" name="button" value="보">보</button>
+    <form action="/result" method="POST">
+        <button type="submit" name="button" id="button" value="보">보</button>
     </form>
 
 

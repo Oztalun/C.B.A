@@ -15,6 +15,8 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
+
+# post는 다른 url에서 정보와 함께 넘어와야 하기 때문에 url을 입력해서 들어오면 상태코드 405와 함께 method not allowed가 뜬다
 @app.route("/result/", methods=['POST'])
 def result():
     computer = rsplist[random.randint(0, 2)]
@@ -57,7 +59,7 @@ def result():
 #     return res.text
 
 
-#https://apt-info.github.io/%EA%B0%9C%EB%B0%9C/python-flask3-post/에서 따온거
+# https://apt-info.github.io/%EA%B0%9C%EB%B0%9C/python-flask3-post/에서 따온거
 # @app.route('/handle_post', methods=['POST'])
 # def handle_post():
 #     params = json.loads(request.get_data(), encoding='utf-8')
@@ -81,7 +83,7 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
-# @app.route("/music/create/")#모달에서 처리하던 코드
+# @app.route("/music/create/")#모달에서 처리하던 코드 get 방식이기 때문에 url에 정보가 있음=임의로 수정가능->사용하지 않는다.
 # def music_create():
 #     username_receive = request.args.get("username")
 #     title_receive = request.args.get("title")
@@ -89,6 +91,8 @@ if __name__ == "__main__":
 #     image_receive = request.args.get("image_url")
 #     return redirect(url_for('Introduce'))
 
+
+# 개인 코드-------------------------------------------------------------------------------------
 # rsplist = ['가위', '바위', '보']  # 가위바위보 양식 맞는지 비교용
 # regame = 'y'
 # check = ['n', "N", "아니요", "아니", "y", "Y", "네"]  # 다시 할지 안할지 물어볼때 양식 맞는지 비교용

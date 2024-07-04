@@ -1,190 +1,81 @@
-import random
+# import random
 import json
 from flask import Flask, render_template, request, redirect, url_for
+from datetime import datetime
+import os
+from flask_sqlalchemy import SQLAlchemy
+
+
+# DB 코드
+basedir = os.path.abspath(os.path.dirname(__file__))
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] =\
+    'sqlite:///' + os.path.join(basedir, 'database.db')
+
+db = SQLAlchemy(app)
+
+
+class RPSGame(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(100), primary_key=False)
+    computer = db.Column(db.String(100), primary_key=False)
+    result = db.Column(db.String(100), primary_key=False)
+    win = db.Column(db.Integer, primary_key=False)
+    lose = db.Column(db.Integer, primary_key=False)
+    draw = db.Column(db.Integer, primary_key=False)
+    GameDay = db.Column(db.String(100), primary_key=False)
+
+
+with app.app_context():
+    db.create_all()
 
 rsplist = ['가위', '바위', '보']  # 가위바위보 양식 맞는지 비교용
 regame = 'y'
 check = ['n', "N", "아니요", "아니", "y", "Y", "네"]  # 다시 할지 안할지 물어볼때 양식 맞는지 비교용
-reports = {'win': 0, 'lose': 0, 'draw': 0}
+reports = {'win': 0, 'lose': 0, 'draw': 0}      # 전역 변수 선언
 finish = ''
-
-app = Flask(__name__)
 
 
 @app.route("/")  # 가위바위보 고르는 페이지, 모달에서 처리 했던것 처럼 값을 보냄
 def home():
-    return render_template('index.html')
+    global reports  # 20240704: 전역 변수 수정 시 global를 선언해줘야한다.
+    record = RPSGame.query.all()
+    record.reverse()        # DB 최근 등록 순으로 불러오기
+
+    if bool(record):
+        reports = {'win': record[0].win,
+                   'lose': record[0].lose, 'draw': record[0].draw}
+        result = record[0].result
+
+    # 전역 변수 reports 읽기 및 참조
+    return render_template('index.html', record=record, reports=reports, result=result)
 
 
-# post는 다른 url에서 정보와 함께 넘어와야 하기 때문에 url을 입력해서 들어오면 상태코드 405와 함께 method not allowed가 뜬다
-@app.route("/result/", methods=['POST'])
-def result():
-    computer = rsplist[random.randint(0, 2)]
-    user = request.form['button']
+@app.route('/receive/data/', methods=['POST'])
+def get_data():
+
+    today = datetime.now()
+    user = request.form.get("user")
+    computer = request.form.get("ComputerVal")
+    result = ""
+
     if computer == user:
-        print('무승부 입니다')
+        result = '무'
         reports['draw'] += 1
-        return render_template('result.html', data='draw')
     elif rsplist[rsplist.index(user)-1] == computer:
-        print('사용자 승리!')
+        result = '승'
         reports['win'] += 1
-        return render_template('result.html', data='win')
     elif rsplist[rsplist.index(user)-2] == computer:
-        print('컴퓨터 승리!')
+        result = '패'
         reports['lose'] += 1
-        return render_template('result.html', data='lose')
 
+    game = RPSGame(user=user, computer=computer,
+                   result=result, win=reports['win'], lose=reports['lose'], draw=reports['draw'], GameDay=today.strftime("%Y-%m-%d"))
+    db.session.add(game)
+    db.session.commit()
 
-# @app.route("/rock/", methods=['POST'])  # 값 받고 계산해서 출력
-# def rock():
-#     button = request.args.get("button")
-#     print(f'User selected: {button}')
-#     params = json.loads(request.get_data(), encoding='utf-8')
-#     return f'You selected: {button}'#redirect(url_for('result'))
+    return redirect(url_for('home'))
 
-# @app.route("/sissor/", methods=['POST'])  # 값 받고 계산해서 출력
-# def sissor():
-#     button = request.args.get("button")
-#     print(f'User selected: {button}')
-#     params = json.loads(request.get_data(), encoding='utf-8')
-#     return f'You selected: {button}'#redirect(url_for('result'))
-
-# @app.route("/paper/", methods=['POST'])  # 값 받고 계산해서 출력
-# def paper():
-#     button = request.args.get("button")
-#     print(f'User selected: {button}')
-#     # return f'You selected: {button}'#redirect(url_for('result', data = data))
-#     res = request.post("result", data=json.dumps(button))
-#     params = json.loads(request.get_data(), encoding='utf-8')
-#     return res.text
-
-
-# https://apt-info.github.io/%EA%B0%9C%EB%B0%9C/python-flask3-post/에서 따온거
-# @app.route('/handle_post', methods=['POST'])
-# def handle_post():
-#     params = json.loads(request.get_data(), encoding='utf-8')
-
-#     params_str = ''
-#     for key in params.keys():
-#         params_str += 'key: {}, value: {}<br>'.format(key, params[key])
-#     return params_str
-
-# @app.route('/send_post', methods=['GET'])
-# def send_post():
-#     params = {
-#         "param1": "test1",
-#         "param2": 123,
-#         "param3": "한글"
-#     }
-#     res = requests.post("http://127.0.0.1:5000/handle_post", data=json.dumps(params))
-#     return res.text
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-# @app.route("/music/create/")#모달에서 처리하던 코드 get 방식이기 때문에 url에 정보가 있음=임의로 수정가능->사용하지 않는다.
-# def music_create():
-#     username_receive = request.args.get("username")
-#     title_receive = request.args.get("title")
-#     artist_receive = request.args.get("artist")
-#     image_receive = request.args.get("image_url")
-#     return redirect(url_for('Introduce'))
-
-
-# 개인 코드-------------------------------------------------------------------------------------
-# rsplist = ['가위', '바위', '보']  # 가위바위보 양식 맞는지 비교용
-# regame = 'y'
-# check = ['n', "N", "아니요", "아니", "y", "Y", "네"]  # 다시 할지 안할지 물어볼때 양식 맞는지 비교용
-# reports = {'win': 0, 'lose': 0, 'draw': 0}
-# finish = ''
-# while regame not in check[0:4]:
-#     computer = rsplist[random.randint(0, 2)]
-#     user = input('가위, 바위, 보 중 하나를 선택하세요 : ')
-#     user = user.replace(" ", "")  # 빈 공간 제거
-#     while user not in rsplist:
-#         print('유효한 입력이 아닙니다. 제대로 입력 해 주세요!!!')
-#         user = input('가위, 바위, 보 중 하나를 선택하세요 : ')
-#     print(f'user: {user}, computer: {computer}')
-
-#     # 평가에서 원하는것 같은 코드
-#     # if computer=="가위":
-#     #     if user=="가위":
-#     #         print('무승부 입니다')
-#     #         reports['draw']+=1
-#     #     elif user=="바위":
-#     #         print('사용자 승리!')
-#     #         reports['win']+=1
-#     #     else:
-#     #         print('컴퓨터 승리!')
-#     #         reports['lose']+=1
-#     # elif computer=='바위':
-#     #     if user=="가위":
-#     #         print('컴퓨터 승리!')
-#     #         reports['lose']+=1
-#     #     elif user=="바위":
-#     #         print('무승부 입니다')
-#     #         reports['draw']+=1
-#     #     else:
-#     #         print('사용자 승리!')
-#     #         reports['win']+=1
-#     # else:
-#     #     if user=="가위":
-#     #         print('사용자 승리!')
-#     #         reports['win']+=1
-#     #     elif user=="바위":
-#     #         print('컴퓨터 승리!')
-#     #         reports['lose']+=1
-#     #     else:
-#     #         print('무승부 입니다')
-#     #         reports['draw']+=1
-
-#     # 다중 if문
-#     # if computer==user:
-#     #     print('무승부 입니다')
-#     #     reports['draw']+=1
-#     # elif computer=="가위":
-#     #     if user=="바위":
-#     #         print('사용자 승리!')
-#     #         reports['win']+=1
-#     #     elif user=="보":
-#     #         print('컴퓨터 승리!')
-#     #         reports['lose']+=1
-#     # elif computer=='바위':
-#     #     if user=="가위":
-#     #         print('컴퓨터 승리!')
-#     #         reports['lose']+=1
-#     #     elif user=="보":
-#     #         print('사용자 승리!')
-#     #         reports['win']+=1
-#     # else:
-#     #     if user=="가위":
-#     #         print('사용자 승리!')
-#     #         reports['win']+=1
-#     #     elif user=="바위":
-#     #         print('컴퓨터 승리!')
-#     #         reports['lose']+=1
-
-#     # 내맘대로
-#     # rsplist[i]와 rsplist[i-1]을 비교하면
-#     if computer == user:
-#         print('무승부 입니다')
-#         reports['draw'] += 1
-#     elif rsplist[rsplist.index(user)-1] == computer:
-#         print('사용자 승리!')
-#         reports['win'] += 1
-#     elif rsplist[rsplist.index(user)-2] == computer:
-#         print('컴퓨터 승리!')
-#         reports['lose'] += 1
-
-#     regame = input('다시 하시겠습니까? (y/n) : ')
-#     while regame not in check:
-#         print('양식에 맞게 입력 해 주세요')
-#         regame = input('다시 하시겠습니까? (y/n) : ')
-
-
-# # 결과 출력
-# print(reports)  # 딕셔너리로 깔끔하지 않아도 되면
-# for reportStatus, reportNum in reports.items():  # 깔끔하게 결과값만 나와야 할 떄
-#     finish += f'{reportStatus} {reportNum} '
-# print(finish)

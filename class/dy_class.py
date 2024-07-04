@@ -31,9 +31,9 @@ while True:
     if name.lower() == "q":
         break
     username = input("회원 아이디: ")
-    password = getpass.getpass("회원 비밀번호: ")
-    password_hash = []
-    password_hash.append(hashlib.sha256(password.encode()).hexdigest())
+    password = getpass.getpass("회원 비밀번호: ")  //터미널에서 비밀번호 입력 시 비밀번호가 보이지 않도록 함.
+    password_hash = [] 
+    password_hash.append(hashlib.sha256(password.encode()).hexdigest())  // 암호화한 password를 리스트에 담도록 해놔서 수정 필요.
 
     # 회원 인스턴스 생성
     member = Member(name, username, password)

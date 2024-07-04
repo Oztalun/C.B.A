@@ -1,55 +1,3 @@
-# 예시
-# class ClassName:
-#     # 클래스 변수 (모든 인스턴스가 공유하는 변수)
-#     class_variable = 0
-    
-#     # 초기화 메서드 (인스턴스 생성 시 호출되는 메서드)
-#     def __init__(self, arg1, arg2):
-#         self.instance_variable1 = arg1
-#         self.instance_variable2 = arg2
-        
-#     # 인스턴스 메서드 (인스턴스에 의해 호출되는 메서드)
-#     def instance_method(self):
-#         # 메서드 내용
-#         return self.instance_variable1 + self.instance_variable2
-    
-#     # 클래스 메서드 (클래스에 의해 호출되는 메서드)
-#     @classmethod
-#     def class_method(cls, arg):
-#         # 클래스 변수에 접근할 때는 cls.class_variable 사용
-#         cls.class_variable += arg
-    
-#     # 정적 메서드 (클래스나 인스턴스와 무관하게 호출되는 메서드)
-#     @staticmethod
-#     def static_method():
-#         # 정적 메서드 내용
-#         return "This is a static method"
-# # 클래스 인스턴스 생성
-# obj = ClassName(10, 20)
-# # 인스턴스 변수 읽기
-# print(obj.class_variable)
-# print(obj.instance_variable1)  # 출력: 10
-# print(obj.instance_variable2)  # 출력: 20
-
-# # 인스턴스 변수 수정
-# obj.instance_variable1 = 30
-# print(obj.instance_variable1)  # 출력: 30
-
-# # 인스턴스 메서드 호출
-# result = obj.instance_method()
-# print(result)  # 출력: 50 (10 + 30)
-
-# # 클래스 메서드 호출
-# ClassName.class_method(5)
-# print(ClassName.class_variable)  # 출력: 5
-
-# # 정적 메서드 호출
-# message = ClassName.static_method()
-# print(message)  # 출력: "This is a static method"
-#----------------------------------------------------------------------------------
-
-
-# ----- 코드 정의 ------
 import hashlib
 
 check = ['n', "N", "아니요", "아니", "y", "Y", "네"]
@@ -108,7 +56,13 @@ while readd not in check[0:4] and readd in check:
     
 for i in posts:
     i.display()
-"""
+
+word = input("특정 단어 입력 : ")
+for i in posts:
+    if word in i.content:
+        i.display()
+
+"""일일이 입력하기 귀찮아서 주석으로 달아둠(예시)
 파이리
 파이
 vkdlfl

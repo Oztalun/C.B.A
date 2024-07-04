@@ -45,10 +45,9 @@ def home():
     if bool(record):
         reports = {'win': record[0].win,
                    'lose': record[0].lose, 'draw': record[0].draw}
-        result = record[0].result
 
     # 전역 변수 reports 읽기 및 참조
-    return render_template('index.html', record=record, reports=reports, result=result)
+    return render_template('index.html', record=record, reports=reports)
 
 
 @app.route('/receive/data/', methods=['POST'])

@@ -1,2 +1,4 @@
-testfolder/
 venv/
+.venv/
+database.db
+rsp/

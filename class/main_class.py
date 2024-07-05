@@ -42,18 +42,19 @@ while True:
 
 for member in members:
     member.display()
+print("\n")
 
 # post 입력받기
 posts = []
 while True:
-    author = input("작성자 (종료하려면 'q' 입력): ")
+    author = input("\n작성자 (종료하려면 'q' 입력): ")
     if author.lower() == "q":
         break
     elif author not in Member.member_list:
         print("해당 id가 생성되지 않았습니다")
         continue
     content = input("게시물 내용: ")
-    title = input("\n게시물 제목: ")
+    title = input("게시물 제목: ")
 
     # 게시물 인스턴스 생성
     post = Post(title, content, author)
@@ -61,8 +62,9 @@ while True:
 
 for post in posts:
     post.display()
+print("\n\n")
 
-specific_word = "기록"
+specific_word = input("특정 단어 입력 : ")
 for post in posts:
     if specific_word in post.content:
         print(f"\n'{specific_word}'이 포함된 게시글 제목: {post.title}")

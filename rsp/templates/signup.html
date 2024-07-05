@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Signup Form</title>
+    <script>
+        function popup() {//제출 버튼 클릭시 실행
+            let errStack = 0;
+            const id = document.getElementById('id')
+            const password = document.getElementById('password')
+            if (id.value == 'asdf') {
+                if (password.value == '0703') {
+                    alert("로그인 되었습니다!")
+                }
+                else {
+                    alert("아이디나  비밀번호가 틀렸습니다")
+                }
+
+            }
+            else if (id.value == '') {
+                alert("아이디를 입력해주세요")
+            }
+            else {
+                alert("아이디나 비밀번호가 틀렸습니다")
+            }
+        }
+
+        function enter_press() {//엔터 입력시 실행
+            if (event.keyCode == 13) {
+                popup()
+            }
+        }
+
+        function next_input() {
+            if (event.keyCode == 13) {
+                document.getElementById('password').focus()
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h2>Signup Form</h2>
+    <form method="post" action="/register">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" onkeypress="next_input()"><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" onkeypress="enter_press()"><br><br>
+        <input type="submit" value="회원가입">
+    </form>
+</body>
+
+</html>

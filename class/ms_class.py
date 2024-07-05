@@ -8,13 +8,12 @@ class Member:
         self.member_list.append(name)
         self.name = name
         self.username = username
-        self.encodedpw = password.encode('utf-8')
-        self.password = hashlib.sha256(self.encodedpw).hexdigest()
+        self.password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
     def display(self):
         print(f"name : {self.name}")
-        print(f"username : {self.username}")
-        print(f'password : {self.password}')
+        print(f"username : {self.username}\n")
+        # print(f'password : {self.password}')
         pass
 
 
@@ -27,7 +26,7 @@ class Post:
     def display(self):
         print(f"title : {self.title}")
         print(f"content : {self.content}")
-        print(f'author : {self.author}')
+        print(f'author : {self.author}\n')
         pass
 
 members = []
@@ -36,9 +35,11 @@ posts = []
 readd = "Y"
 while readd not in check[0:4] and readd in check:
     members.append(Member(input("name : "), input("username : "), input("password : ")))
-    readd = input("더 추가 하시겠습니까?")
+    readd = input("\n더 추가 하시겠습니까?\n")
+    print("")
     while readd not in check:
-        readd = input("더 추가 하시겠습니까?")
+        readd = input("\n더 추가 하시겠습니까?\n")
+        print("")
 
 for i in members:
     i.display()
@@ -50,9 +51,11 @@ while readd not in check[0:4] and readd in check:
         print("해당 이름이 존재하지 않습니다.")
         name = input("who is author? : ")
     posts.append(Post(input("제목을 입력하세요 : "), input("내용을 입력하세요 : "), name))
-    readd = input("더 추가 하시겠습니까?")
+    readd = input("\n더 추가 하시겠습니까?\n")
+    print("")
     while readd not in check:
-        readd = input("더 추가 하시겠습니까?")
+        readd = input("\n더 추가 하시겠습니까?\n")
+        print("")
     
 for i in posts:
     i.display()
@@ -79,5 +82,5 @@ butterfl
 야도
 diehfks
 아니
- 
+
 """

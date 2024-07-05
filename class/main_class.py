@@ -65,6 +65,7 @@ for post in posts:
 print("\n\n")
 
 specific_word = input("특정 단어 입력 : ")
+print(f'다음은 게시물 내용에 {specific_word}가(이) 포함된 게시글 정보 입니다.\n')
 for post in posts:
     if specific_word in post.content:
-        print(f"\n'{specific_word}'이 포함된 게시글 제목: {post.title}")
+        print(f"\n'게시물 제목: {post.title}'\t '게시물 내용: {post.content}'\t'작성자: {post.author}'")

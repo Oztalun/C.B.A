@@ -51,7 +51,7 @@ while True:
     if author.lower() == "q":
         break
     elif author not in Member.member_list:
-        print("해당 id가 생성되지 않았습니다")
+        print("등록된 회원이 아닙니다")
         continue
     content = input("게시물 내용: ")
     title = input("게시물 제목: ")

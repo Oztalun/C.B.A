@@ -41,7 +41,8 @@ def home():
     global reports  # 20240704: 전역 변수 수정 시 global를 선언해줘야한다.
     record = RPSGame.query.all()
     record.reverse()        # DB 최근 등록 순으로 불러오기
-
+    #1번부터 출력할지 마지막부터 출력할지 회의
+    
     if bool(record):
         reports = {'win': record[0].win,
                    'lose': record[0].lose, 'draw': record[0].draw}

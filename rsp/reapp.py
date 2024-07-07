@@ -65,11 +65,17 @@ def signin_data():
 
     # 아이디 비번 짝 맞으면 로그인 성공
     id = User.query.filter_by(username=username).first()
-    if id.password == password:
-        print("로그인 성공")
-        return redirect(url_for('home'))  # 로그인 성공하면 메인 주소로 보내기(home바꾸기)
+    if id:
+        print("id exist")
+        if id.password == password:
+            print("로그인 성공")
+            return redirect(url_for('home'))  # 로그인 성공하면 메인 주소로 보내기(home바꾸기)
+        else:
+            print("incorrect")
+            return redirect(url_for('signin'))
     else:
-        return redirect(url_for('home'))
+        print("id not exist")
+        return redirect(url_for('signin'))
 
 
 # 회원가입 하면 처리하러 오는곳

@@ -75,6 +75,15 @@
         <!-- end modal -->
 
         <!-- 사용자 랭킹 모달 -->
+        <div class="container text-center">
+            <form action="{{ url_for('top_users') }}" method="POST">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topUsersModal">
+                    사용자 순위 보기
+                </button>
+            </form>
+
+        </div>
+
         <!-- 모달 띄우는 버튼, 닫는 버튼 추가 -->
         <div class="modal fade" id="topUsersModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="topUsersModalLabel" aria-hidden="true">
@@ -85,7 +94,32 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>**top_users.html 보여주기**</p>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col" width="10%">#</th>
+                                    <th scope="col" width="20%">사용자 ID</th>
+                                    <th scope="col" width="20%">사용자</th>
+                                    <th scope="col" width="15%">승</th>
+                                    <th scope="col" width="15%">패</th>
+                                    <th scope="col" width="15%">무</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in top_users %}
+                                <tr>
+                                    <th scope="row">{{ loop.index }}</th>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.user }}</td>
+                                    <td>{{ user.win }}</td>
+                                    <td>{{ user.lose }}</td>
+                                    <td>{{ user.draw }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- <p>~~</p> -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

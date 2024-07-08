@@ -37,8 +37,7 @@ posts = []
 
 readd = "Y"
 while readd not in check[0:4] and readd in check:
-    members.append(Member(input("name : "), input(
-        "username : "), input("password : ")))
+    members.append(Member(input("name : "), input("username : "), input("password : ")))
     readd = input("\n더 추가 하시겠습니까?\n")
     print("")
     while readd not in check:

@@ -59,7 +59,7 @@ def home():
     return render_template("index.html", record=record, reports=reports)
 
 
-@app.route("/top_users/")  # 상위 10명의 사용자를 표시하는 페이지
+@app.route("/top_users/")  # 상위 10명의 사용자를 표시하는 모달. (버튼 눌러서 모달을 띄우고 다시 닫을 수 있는 방식으로 구현)
 def top_users():
     # 많이 승리한 사용자 순으로 정렬하며 동점자의 경우 적게 패배한 사용자가 높이 랭킹.
     top_users = (

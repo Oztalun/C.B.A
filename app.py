@@ -27,6 +27,12 @@ class RPSGame(db.Model):
     GameDay = db.Column(db.String(100), primary_key=False)
 
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), primary_key=False)
+    password = db.Column(db.String(100), primary_key=False)
+
+
 with app.app_context():
     db.create_all()
 
@@ -45,7 +51,66 @@ reports = {"win": 0, "lose": 0, "draw": 0}  # 전역 변수 선언
 finish = ""
 
 
-@app.route("/")  # 가위바위보 고르는 페이지, 모달에서 처리 했던것 처럼 값을 보냄
+@app.route("/")
+def view():
+    return 'mainpage<a href="/signin">로그인</a><br><a href="/signup">회원가입</a>'
+
+
+# 로그인 폼
+@app.route("/signin")
+def signin():
+    return render_template("signin.html")
+
+
+# 회원가입 폼
+@app.route("/signup")
+def signupweb():
+    return render_template("signup.html")
+
+
+# 로그인 하면 처리하러 오는곳
+@app.route("/signin_data", methods=["POST"])
+def signin_data():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    # 아이디 비번 짝 맞으면 로그인 성공
+    id = User.query.filter_by(username=username).first()
+    if id:
+        print("id exist")
+        if id.password == password:
+            print("로그인 성공")
+            return redirect(
+                url_for("home")
+            )  # 로그인 성공하면 메인 주소로 보내기(home바꾸기)
+        else:
+            print("incorrect")
+            return redirect(url_for("signin"))
+    else:
+        print("id not exist")
+        return redirect(url_for("signin"))
+
+
+# 회원가입 하면 처리하러 오는곳
+@app.route("/signup_data", methods=["POST"])
+def signup_data():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    # 이미 아이디가 있는 경우
+    if User.query.filter_by(username=username).first():
+        print("already exist")
+        return redirect(url_for("signin"))  # 아이디가 있으니 로그인 화면으로
+
+    # 아이디가 없으면 생성
+    new_user = User(username=username, password=password)
+    db.session.add(new_user)
+    db.session.commit()
+    print("회원가입 완료")
+    return redirect(url_for("signin"))  # 회원가입 후 로그인하러home으로
+
+
+@app.route("/game")  # 가위바위보 고르는 페이지, 모달에서 처리 했던것 처럼 값을 보냄
 def home():
     global reports  # 20240704: 전역 변수 수정 시 global를 선언해줘야한다.
     record = RPSGame.query.all()
@@ -59,6 +124,7 @@ def home():
     return render_template("index.html", record=record, reports=reports)
 
 
+# @app.route('/receive/data/', methods=['POST'])
 @app.route(
     "/top_users/"
 )  # 상위 10명의 사용자를 표시하는 모달. (버튼 눌러서 모달을 띄우고 다시 닫을 수 있는 방식으로 구현)

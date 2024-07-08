@@ -5,13 +5,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Users</title>
-    <!-- CSS stylesheets나 링크 추가 -->
-
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
 <body>
-    <h1>Top Users</h1>
+    <div class="modal fade" id="topUsersModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="topUsersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="topUsersModalLabel">Top Users</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" width="10%">#</th>
+                                <th scope="col" width="20%">사용자 ID</th>
+                                <th scope="col" width="20%">사용자</th>
+                                <th scope="col" width="15%">승</th>
+                                <th scope="col" width="15%">패</th>
+                                <th scope="col" width="15%">무</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in top_users %}
+                            <tr>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>{{user.id}}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.user }}</td>
+                                <td>{{ user.win }}</td>
+                                <td>{{ user.lose }}</td>
+                                <td>{{ user.draw }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<!-- <h1>Top Users</h1>
     <table>
         <thead>
             <tr>
@@ -35,4 +77,4 @@
 
 </body>
 
-</html>
+</html> -->

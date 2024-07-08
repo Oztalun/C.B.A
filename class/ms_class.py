@@ -2,8 +2,10 @@ import hashlib
 
 check = ['n', "N", "아니요", "아니", "y", "Y", "네"]
 
+
 class Member:
     member_list = []
+
     def __init__(self, name, username, password):
         self.member_list.append(name)
         self.name = name
@@ -22,12 +24,13 @@ class Post:
         self.title = title
         self.content = content
         self.author = author
-    
+
     def display(self):
         print(f"title : {self.title}")
         print(f"content : {self.content}")
         print(f'author : {self.author}\n')
         pass
+
 
 members = []
 posts = []
@@ -56,7 +59,7 @@ while readd not in check[0:4] and readd in check:
     while readd not in check:
         readd = input("\n더 추가 하시겠습니까?\n")
         print("")
-    
+
 for i in posts:
     i.display()
 

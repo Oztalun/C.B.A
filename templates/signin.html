@@ -79,7 +79,7 @@
                 style="margin-top: 2.5rem; margin-bottom: 1.5rem; font-size: 1.3rem; font-weight: 400; color: rgb(119, 119, 119);">
                 로그인</h3>
             <div style="display: block;">
-                <form method="post" action="/signin_data">
+                <form method="post" action="{{ url_for('signin_data') }}">
                     <input type="text" placeholder="Id" id="username" name="username"
                         style="color:rgb(1, 1, 1); background-color: rgb(238, 238, 238); margin-left: 10px; width: 70%; padding: 0px 0px 0px 6px; margin-top: 20px; border: 1px solid lightgray; border-radius: 0.3rem;"
                         onkeypress="moveToNext()" required><!--아이디-->
@@ -97,7 +97,7 @@
                     </div>
                     <br><br>
                 </form>
-                <a href="/signup">회원가입</a>
+                <a href="url_for("signupweb")">회원가입</a>
             </div>
 
         </div>

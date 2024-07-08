@@ -26,6 +26,10 @@ class RPSGame(db.Model):
     draw = db.Column(db.Integer, primary_key=False)
     GameDay = db.Column(db.String(100), primary_key=False)
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), primary_key=False)
+    password = db.Column(db.String(100), primary_key=False)
 
 with app.app_context():
     db.create_all()

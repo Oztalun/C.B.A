@@ -75,12 +75,12 @@ def signin_data():
             return redirect(url_for('signin'))
     else:
         print("id not exist")
-        return redirect(url_for('signin'))
+        return redirect(url_for('signup'))
 
 
 # 회원가입 하면 처리하러 오는곳
-@app.route('/register', methods=['POST'])
-def register():
+@app.route('/signup_data', methods=['POST'])
+def signup_data():
     username = request.form['username']
     password = request.form['password']
 

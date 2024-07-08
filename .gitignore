@@ -1,6 +1,7 @@
 .venv/
+rsp/
 venv/
 Object.py
 class/
 database.db
-rsp/
+# 푸시 하지 말아야 할 파일 또는 코드 작성

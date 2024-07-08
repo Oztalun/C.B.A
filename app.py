@@ -55,20 +55,17 @@ def home():
     if bool(record):
         reports = {"win": record[0].win, "lose": record[0].lose, "draw": record[0].draw}
 
-    # 승리 및 패배 횟수 계산
-    for game in record:
-        if game.result == "승":
-            reports["win"] += 1
-        elif game.result == "패":
-            reports["lose"] += 1
-
-    # 상위 10명의 기록
-    top_10_records = record[:10]
-
-    return render_template("index.html", record=top_10_records, reports=reports)
-
     # 전역 변수 reports 읽기 및 참조
-    # return render_template('index.html', record=record, reports=reports)
+    return render_template("index.html", record=record, reports=reports)
+
+
+@app.route("/top_users/")  # 상위 10명의 사용자를 표시하는 페이지
+def top_users():
+    # 많이 승리한 사용자 순으로 정렬하며 동점자의 경우 적게 패배한 사용자가 높이 랭킹.
+    top_users = (
+        RPSGame.query.order_by(RPSGame.win.desc(), RPSGame.lose.asc()).limit(10).all()
+    )
+    return render_template("top_users.html", top_users=top_users)
 
 
 @app.route("/receive/data/", methods=["POST"])

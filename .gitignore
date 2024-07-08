@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 venv/
 .venv/
 database.db
 rsp/
+=======
+.venv/
+venv/
+Object.py
+class/
+>>>>>>> a5a0919b63b8453a8c7ca252edc4a24c166359bc

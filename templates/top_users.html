@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Users</title>
     <!-- CSS stylesheets나 링크 추가 -->
+
+
 </head>
+
 <body>
     <h1>Top Users</h1>
     <table>
@@ -19,15 +23,16 @@
         </thead>
         <tbody>
             {% for user in top_users %}
-                <tr>
-                    <td>{{ user.user }}</td>
-                    <td>{{ user.win }}</td>
-                    <td>{{ user.lose }}</td>
-                    <td>{{ user.draw }}</td>
-                </tr>
+            <tr>
+                <td>{{ user.user }}</td>
+                <td>{{ user.win }}</td>
+                <td>{{ user.lose }}</td>
+                <td>{{ user.draw }}</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
 
 </body>
+
 </html>

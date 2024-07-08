@@ -1,4 +1,6 @@
-venv/
 .venv/
+venv/
+Object.py
+class/
 database.db
 rsp/

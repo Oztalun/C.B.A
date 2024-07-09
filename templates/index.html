@@ -29,6 +29,23 @@
     <input type="hidden" id="result" name="result" value="{{ record[0].result }}"/>
 
     <div class="container text-center">
+        <form id="gameForm" action="{{ url_for('get_data') }}" method="POST">
+            <!-- user 가위바위보 선택 버튼 -->
+            <div>
+                <!-- 모달창 적용시 type="button" 추가(KH) -->
+                <button type="button" class="btn btn-outline-secondary border-0 border-height-100" id="user" name="user"
+                    value="가위" data-bs-toggle="modal" data-bs-target="#resultModal" onclick="submitForm('가위')">
+                    <img src="http://itsys.hansung.ac.kr/WebEditor/upload/images/gawi.gif">
+                </button>
+                <button type="button" class="btn btn-outline-secondary border-0" id="user" name="user" value="바위"
+                    data-bs-toggle="modal" data-bs-target="#resultModal" onclick="submitForm('바위')">
+                    <img src="http://itsys.hansung.ac.kr/WebEditor/upload/images/bawi.gif">
+                </button>
+                <button type="button" class="btn btn-outline-secondary border-0" id="user" name="user" value="보"
+                    data-bs-toggle="modal" data-bs-target="#resultModal" onclick="submitForm('보')">
+                    <img src="http://itsys.hansung.ac.kr/WebEditor/upload/images/bo.gif">
+                </button>
+            </div>
         <!-- <form action="{{ url_for('get_data') }}" method="POST"> -->
         <!-- user 가위바위보 선택 버튼 -->
         <div>
@@ -55,11 +72,19 @@
         </div>
         <!-- </form> -->
 
+        <!-- 결과 모달창 띄우기(KH) -->
+        <div class="modal fade" id="resultModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="resultModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
         <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="resultModalLabel">결과</h5>
+                    </div>
+                    <div class="modal-body" id="resultModalBody">
                     <!-- <div class="modal-header">
                         <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -67,11 +92,15 @@
                     <div class="modal-body">
                         ...
                     </div>
+                    <div class="modal-footer">
+                        <p class="text-muted small">계속하시려면 바깥 공간을 클릭하세요.</p>
+                    </div>
                     <!-- <div class="modal-footer" style="display:none">
                         
                     </div> -->
                 </div>
             </div>
+        </div>
         </div>
         <!-- end modal -->
 
@@ -100,19 +129,16 @@
                                 <tr>
                                     <th scope="col" width="10%">#</th>
                                     <th scope="col" width="20%">사용자 ID</th>
-                                    <th scope="col" width="20%">사용자</th>
                                     <th scope="col" width="15%">승</th>
                                     <th scope="col" width="15%">패</th>
                                     <th scope="col" width="15%">무</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for user in top_users %}
+                                 {% for user in top_users %}  <!-- app.py 참고 -->
                                 <tr>
                                     <th scope="row">{{ loop.index }}</th>
-                                    <td>{{ user.id }}</td>
                                     <td>{{ user.username }}</td>
-                                    <td>{{ user.user }}</td>
                                     <td>{{ user.win }}</td>
                                     <td>{{ user.lose }}</td>
                                     <td>{{ user.draw }}</td>
@@ -130,9 +156,9 @@
         </div>
 
         <div style="text-align: left;">
-            <button type="button" class="btn btn-primary font-weight-bold">승: {{ reports.win }}</button>
-            <button type="button" class="btn btn-danger font-weight-bold">패: {{ reports.lose }}</button>
-            <button type="button" class="btn btn-success font-weight-bold">무: {{ reports.draw }}</button>
+            <button type="button" class="btn btn-primary font-weight-bold">승리: {{ reports.win }}</button>
+            <button type="button" class="btn btn-danger font-weight-bold">패배: {{ reports.lose }}</button>
+            <button type="button" class="btn btn-success font-weight-bold">무승부: {{ reports.draw }}</button>
         </div>
 
         <table class="table table-hover">
@@ -160,6 +186,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://tistory4.daumcdn.net/tistory/3134841/skin/images/confetti_v2.js"></script>
     <script>
@@ -200,7 +227,6 @@
             { val: '가위', img: 'http://itsys.hansung.ac.kr/WebEditor/upload/images/gawi.gif' },
             { val: '바위', img: 'http://itsys.hansung.ac.kr/WebEditor/upload/images/bawi.gif' },
             { val: '보', img: 'http://itsys.hansung.ac.kr/WebEditor/upload/images/bo.gif' },
-
         ];
 
         var RPSIndex = 0;
@@ -214,6 +240,47 @@
         // 0.1초마다 이미지 변경
         setInterval(switchImage, 100);
 
+        function submitForm(userChoice) {
+            // 컴퓨터 선택 값 가져오기(KH)
+            var computerChoice = document.getElementById('ComputerVal').value;
+
+            // 사용자의 선택을 form에 설정(KH)
+            var form = document.getElementById('gameForm');
+
+            // 기존의 히든 입력 필드 제거
+            var existingInput = form.querySelector('input[name="user"]');
+            if (existingInput) {
+                form.removeChild(existingInput);
+            }
+
+            // 새로운 히든 입력 필드 추가
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'user';
+            input.value = userChoice;
+            form.appendChild(input);
+
+            // Ajax 요청으로 form 데이터 전송(KH)
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function (response) {
+                    // 모달에 결과 표시(KH)
+                    var resultText = `사용자 : ${response.user}\n컴퓨터 : ${response.computer}\n결과 : ${response.result}`;
+                    document.getElementById('resultModalBody').innerText = resultText;
+                    $('#resultModal').modal('show');
+                },
+                error: function (error) {
+                    console.log('Error:', error);
+                }
+            });
+        }
+
+        // 모달이 닫힐 때 페이지 새로고침
+        $('#resultModal').on('hidden.bs.modal', function () {
+            location.reload();
+        });
     </script>
 </body>
 

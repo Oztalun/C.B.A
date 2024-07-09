@@ -1,0 +1,5 @@
+{% if data %}
+안녕하세요 {{data}}님<br><a href='{{url_for('signout')}}'>로그아웃하기</a>
+{% else %}
+로그아웃 상태입니다<br><a href="{{url_for('signin')}}">로그인</a>
+{% endif %}

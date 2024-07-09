@@ -25,7 +25,7 @@ class RPSGame(db.Model):
     lose = db.Column(db.Integer, primary_key=False)
     draw = db.Column(db.Integer, primary_key=False)
     GameDay = db.Column(db.String(100), primary_key=False)
-    username = db.Column(db.String(100), primary_key=False)
+    # username = db.Column(db.String(100), primary_key=False)
 
 
 class User(db.Model):
@@ -48,7 +48,6 @@ regame = 'y'
 check = ['n', "N", "아니요", "아니", "y", "Y", "네"]  # 다시 할지 안할지 물어볼때 양식 맞는지 비교용
 reports = {'win': 0, 'lose': 0, 'draw': 0}      # 전역 변수 선언
 finish = ''
-username = ''       # 전역 변수 선언
 
 @app.route("/")
 def view():
@@ -69,7 +68,6 @@ def signupweb():
 # 로그인 하면 처리하러 오는곳
 @app.route("/signin_data", methods=["POST"])
 def signin_data():
-    global username
     username = request.form["username"]
     password = request.form["password"]
 
@@ -110,8 +108,8 @@ def signup_data():
 @app.route("/game")  # 가위바위보 고르는 페이지, 모달에서 처리 했던것 처럼 값을 보냄
 def home():
     global reports  # 20240704: 전역 변수 수정 시 global를 선언해줘야한다.
-    record = RPSGame.query.filter_by(username=username).all()
-    record.reverse()  # DB 최근 등록 순으로 불러오기    
+    record = RPSGame.query.all()
+    record.reverse()  # DB 최근 등록 순으로 불러오기
     # 1번부터 출력할지 마지막부터 출력할지 회의
 
     if bool(record):
@@ -160,7 +158,6 @@ def get_data():
         lose=reports["lose"],
         draw=reports["draw"],
         GameDay=today.strftime("%Y-%m-%d"),
-        username=username,
     )
     db.session.add(game)
     db.session.commit()

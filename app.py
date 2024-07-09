@@ -9,6 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 # DB 코드
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
+app.secret_key = 'qwerklsmjacveio'
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
     basedir, "database.db"
 )
@@ -25,7 +26,6 @@ class RPSGame(db.Model):
     lose = db.Column(db.Integer, primary_key=False)
     draw = db.Column(db.Integer, primary_key=False)
     GameDay = db.Column(db.String(100), primary_key=False)
-    # username = db.Column(db.String(100), primary_key=False)
 
 
 class User(db.Model):
@@ -51,8 +51,15 @@ finish = ''
 
 @app.route("/")
 def view():
-    return 'mainpage<a href="/signin">로그인</a><br><a href="/signup">회원가입</a>'
+    return 'mainpage<a href="/signin">로그인</a><br><a href="/signup">회원가입</a>'#html제작 필요
 
+@app.route("/test")
+def test():
+    if "userID" in session:
+        return render_template("signout.html", data=session["userID"], login = True)
+    else:
+        return render_template("signout.html", login = False)
+    
     
 #로그인 폼
 @app.route("/signin")
@@ -77,6 +84,7 @@ def signin_data():
         print("id exist")
         if id.password == password:
             print("로그인 성공")
+            session["userID"] = username
             return redirect(url_for('home'))  # 로그인 성공하면 메인 주소로 보내기(home바꾸기)
         else:
             print("incorrect")
@@ -103,6 +111,12 @@ def signup_data():
     db.session.commit()
     print("회원가입 완료")
     return redirect(url_for("signin"))  # 회원가입 후 로그인하러home으로
+
+#로그아웃 
+@app.route('/signout')
+def signout():
+    session.pop("userID")
+    return redirect(url_for("view"))
 
 
 @app.route("/game")  # 가위바위보 고르는 페이지, 모달에서 처리 했던것 처럼 값을 보냄
@@ -159,6 +173,14 @@ def get_data():
         draw=reports["draw"],
         GameDay=today.strftime("%Y-%m-%d"),
     )
+    gg = ranking.query.filter_by(username = session["userID"]).first()
+    if gg:#전적이 있으면
+        gg.win = reports["win"]
+        gg.lose = reports["lose"]
+        gg.draw = reports["draw"]
+    else:
+        rank = ranking(username = session["userID"], win=reports["win"], lose=reports["lose"], draw=reports["draw"],)
+        db.session.add(rank)
     db.session.add(game)
     db.session.commit()
 

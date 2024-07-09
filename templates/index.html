@@ -174,10 +174,10 @@
                     document.getElementById('resultModalBody').innerText = resultText;
                     
                     // 승리 시 이벤트
-                    // if (response.result == '승') {
+                    if (response.result == '승') {
                         $("#startButton").trigger("click");
                         $('#canvas').show();
-                    // }
+                    }
 
                     // 3초 뒤에 새로고침
                     setTimeout(function () {

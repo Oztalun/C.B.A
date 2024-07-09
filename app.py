@@ -121,6 +121,8 @@ def signout():
 
 @app.route("/game")  # 가위바위보 고르는 페이지, 모달에서 처리 했던것 처럼 값을 보냄
 def home():
+    if "userID" not in session:
+        return redirect(url_for("view"))
     global reports  # 20240704: 전역 변수 수정 시 global를 선언해줘야한다.
     record = RPSGame.query.all()
     record.reverse()  # DB 최근 등록 순으로 불러오기

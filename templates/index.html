@@ -68,17 +68,18 @@
             </div>
         </div>
 
-        <!-- 사용자 랭킹 모달 -->
+        <!-- 사용자 랭킹 모달 button -->
         <div class="container text-center">
-            <form action="{{ url_for('top_users') }}" method="POST">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topUsersModal">
+            <form action="{{ url_for('top_users') }}">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topUsersModal"
+                    style="float: right;">
                     사용자 순위 보기
                 </button>
             </form>
 
         </div>
 
-        <!-- 모달 띄우는 버튼, 닫는 버튼 추가 -->
+        <!-- 사용자 랭킹 모달 -->
         <div class="modal fade" id="topUsersModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="topUsersModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -92,7 +93,6 @@
                             <thead>
                                 <tr>
                                     <th scope="col" width="10%">#</th>
-                                    <th scope="col" width="20%">사용자 ID</th>
                                     <th scope="col" width="20%">사용자</th>
                                     <th scope="col" width="15%">승</th>
                                     <th scope="col" width="15%">패</th>
@@ -103,17 +103,14 @@
                                 {% for user in top_users %}
                                 <tr>
                                     <th scope="row">{{ loop.index }}</th>
-                                    <td>{{ user.id }}</td>
-                                    <td>{{ user.username }}</td>
-                                    <td>{{ user.user }}</td>
-                                    <td>{{ user.win }}</td>
-                                    <td>{{ user.lose }}</td>
-                                    <td>{{ user.draw }}</td>
+                                    <td>{{ ranking.username }}</td>
+                                    <td>{{ ranking.win }}</td>
+                                    <td>{{ ranking.lose }}</td>
+                                    <td>{{ ranking.draw }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <!-- <p>~~</p> -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -172,7 +169,7 @@
                     // 모달에 결과 표시(KH)
                     var resultText = `사용자 : ${response.user}\n컴퓨터 : ${response.computer}\n결과 : ${response.result}`;
                     document.getElementById('resultModalBody').innerText = resultText;
-                    
+
                     // 승리 시 이벤트
                     if (response.result == '승') {
                         $("#startButton").trigger("click");

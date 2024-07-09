@@ -18,7 +18,6 @@ db = SQLAlchemy(app)
 
 class RPSGame(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), primary_key=False)
     user = db.Column(db.String(100), primary_key=False)
     computer = db.Column(db.String(100), primary_key=False)
     result = db.Column(db.String(100), primary_key=False)
@@ -50,7 +49,6 @@ check = [
 ]  # 다시 할지 안할지 물어볼때 양식 맞는지 비교용
 reports = {"win": 0, "lose": 0, "draw": 0}  # 전역 변수 선언
 finish = ""
-username = ""   #username을 전역변수로 선언
 
 
 @app.route("/")
@@ -73,7 +71,6 @@ def signupweb():
 # 로그인 하면 처리하러 오는곳
 @app.route("/signin_data", methods=["POST"])
 def signin_data():
-    global username
     username = request.form["username"]
     password = request.form["password"]
 
@@ -158,7 +155,6 @@ def get_data():
         reports["lose"] += 1
 
     game = RPSGame(
-        username=username,
         user=user,
         computer=computer,
         result=result,

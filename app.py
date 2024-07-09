@@ -137,23 +137,25 @@ def home():
     # 1번부터 출력할지 마지막부터 출력할지 회의
     rank = ranking.query.filter_by(username=session["userID"]).first()
 
+    rankList = top_users()
+
     if bool(rank):
         reports = {"win": rank.win, "lose": rank.lose, "draw": rank.draw}
 
     # 전역 변수 reports 읽기 및 참조
-    return render_template("index.html", record=record, reports=reports)
+    return render_template("index.html", record=record, reports=reports, ranking=rankList)
 
 
 # @app.route('/receive/data/', methods=['POST'])
 @app.route(
-    "/top_users", methods=["POST"]
+    "/top_users"
 )  # 상위 10명의 사용자를 표시하는 모달. (버튼 눌러서 모달을 띄우고 다시 닫을 수 있는 방식으로 구현)
 def top_users():
     # 많이 승리한 사용자 순으로 정렬하며 동점자의 경우 적게 패배한 사용자가 높이 랭킹.
     top_users = (
         ranking.query.order_by(ranking.win.desc(), ranking.lose.asc()).limit(10).all()
     )
-    return render_template("top_users.html", top_users=top_users)
+    return top_users
 
 
 @app.route("/receive/data/", methods=["POST"])

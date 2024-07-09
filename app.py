@@ -189,7 +189,7 @@ def get_data():
         # win=userReports.win,
         # lose=userReports.lose,
         # draw=userReports.draw,
-        GameDay=today.strftime("%Y-%m-%d"),
+        GameDay=today.strftime("%Y-%m-%d %H:%M:%S"),
         username=session["userID"]
     )
 

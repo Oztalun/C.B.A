@@ -22,9 +22,9 @@ class RPSGame(db.Model):
     user = db.Column(db.String(100), primary_key=False)
     computer = db.Column(db.String(100), primary_key=False)
     result = db.Column(db.String(100), primary_key=False)
-    win = db.Column(db.Integer, primary_key=False)
-    lose = db.Column(db.Integer, primary_key=False)
-    draw = db.Column(db.Integer, primary_key=False)
+    # win = db.Column(db.Integer, primary_key=False)
+    # lose = db.Column(db.Integer, primary_key=False)
+    # draw = db.Column(db.Integer, primary_key=False)
     GameDay = db.Column(db.String(100), primary_key=False)
     username = db.Column(db.String(100), primary_key=False)  # 필터로 사용자별로 구분용
 
@@ -133,11 +133,12 @@ def home():
         return redirect(url_for("view"))
     global reports  # 20240704: 전역 변수 수정 시 global를 선언해줘야한다.
     record = RPSGame.query.filter_by(username=session["userID"]).all()
-    record.reverse()  # DB 최근 등록 순으로 불러오기
+    # record.reverse()  # DB 최근 등록 순으로 불러오기
     # 1번부터 출력할지 마지막부터 출력할지 회의
+    rank = ranking.query.filter_by(username=session["userID"]).first()
 
-    if bool(record):
-        reports = {"win": record[0].win, "lose": record[0].lose, "draw": record[0].draw}
+    if bool(rank):
+        reports = {"win": rank.win, "lose": rank.lose, "draw": rank.draw}
 
     # 전역 변수 reports 읽기 및 참조
     return render_template("index.html", record=record, reports=reports)
@@ -185,9 +186,9 @@ def get_data():
         user=user,
         computer=computer,
         result=result,
-        win=userReports.win,
-        lose=userReports.lose,
-        draw=userReports.draw,
+        # win=userReports.win,
+        # lose=userReports.lose,
+        # draw=userReports.draw,
         GameDay=today.strftime("%Y-%m-%d"),
         username=session["userID"]
     )

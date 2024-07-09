@@ -22,9 +22,6 @@ class RPSGame(db.Model):
     user = db.Column(db.String(100), primary_key=False)
     computer = db.Column(db.String(100), primary_key=False)
     result = db.Column(db.String(100), primary_key=False)
-    # win = db.Column(db.Integer, primary_key=False)
-    # lose = db.Column(db.Integer, primary_key=False)
-    # draw = db.Column(db.Integer, primary_key=False)
     GameDay = db.Column(db.String(100), primary_key=False)
     username = db.Column(db.String(100), primary_key=False)  # 필터로 사용자별로 구분용
 
@@ -146,10 +143,7 @@ def home():
     return render_template("index.html", record=record, reports=reports, ranking=rankList)
 
 
-# @app.route('/receive/data/', methods=['POST'])
-@app.route(
-    "/top_users"
-)  # 상위 10명의 사용자를 표시하는 모달. (버튼 눌러서 모달을 띄우고 다시 닫을 수 있는 방식으로 구현)
+# 상위 10명의 사용자를 표시하는 모달. (버튼 눌러서 모달을 띄우고 다시 닫을 수 있는 방식으로 구현)
 def top_users():
     # 많이 승리한 사용자 순으로 정렬하며 동점자의 경우 적게 패배한 사용자가 높이 랭킹.
     top_users = (
@@ -188,9 +182,6 @@ def get_data():
         user=user,
         computer=computer,
         result=result,
-        # win=userReports.win,
-        # lose=userReports.lose,
-        # draw=userReports.draw,
         GameDay=today.strftime("%Y-%m-%d %H:%M:%S"),
         username=session["userID"]
     )
@@ -199,7 +190,6 @@ def get_data():
     db.session.add(game)
     db.session.commit()
 
-    #return redirect(url_for("home"))
     return jsonify(user=user, computer=computer, result=result)
 
 

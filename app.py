@@ -1,6 +1,6 @@
 # import random
 import json
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from datetime import datetime
 import os
 from flask_sqlalchemy import SQLAlchemy
@@ -196,7 +196,8 @@ def get_data():
     db.session.add(game)
     db.session.commit()
 
-    return redirect(url_for("home"))
+    #return redirect(url_for("home"))
+    return jsonify(user=user, computer=computer, result=result)
 
 
 if __name__ == "__main__":

@@ -138,7 +138,7 @@
             <tbody>
                 {% for data in record %}
                 <tr>
-                    <th scope="row">{{ data.id }}</th>
+                    <th scope="row">{{ loop.index }}</th>
                     <td>{{ data.user }}</td>
                     <td>{{ data.computer }}</td>
                     <td>{{ data.result }}</td>

@@ -9,9 +9,9 @@ from flask_sqlalchemy import SQLAlchemy
 # DB 코드
 basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
-app.secret_key = "lkjds#2-1j@dsp!ldaskfj"
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-    'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(
+    basedir, "database.db"
+)
 
 db = SQLAlchemy(app)
 
@@ -49,41 +49,27 @@ check = ['n', "N", "아니요", "아니", "y", "Y", "네"]  # 다시 할지 안�
 reports = {'win': 0, 'lose': 0, 'draw': 0}      # 전역 변수 선언
 finish = ''
 
-
-@app.route('/')
+@app.route("/")
 def view():
     return 'mainpage<a href="/signin">로그인</a><br><a href="/signup">회원가입</a>'
 
-@app.route('/test')
-def test():
-    if "userID" in session:
-        return render_template('signout.html', data=session.get('userID'))
-    else:
-        return render_template('signout.html', data=session.get('userID'))
-
-@app.route('/signout')
-def signout():
-    session.pop('userID')
-    return redirect(url_for('test'))
-
-# 로그인 폼
+    
+#로그인 폼
 @app.route("/signin")
 def signin():
     return render_template("signin.html")
 
-# 회원가입 폼
-
-
+#회원가입 폼
 @app.route('/signup')
 def signupweb():
     return render_template("signup.html")
 
 
 # 로그인 하면 처리하러 오는곳
-@app.route('/signin_data', methods=['POST'])
+@app.route("/signin_data", methods=["POST"])
 def signin_data():
-    username = request.form['username']
-    password = request.form['password']
+    username = request.form["username"]
+    password = request.form["password"]
 
     # 아이디 비번 짝 맞으면 로그인 성공
     id = User.query.filter_by(username=username).first()
@@ -91,47 +77,47 @@ def signin_data():
         print("id exist")
         if id.password == password:
             print("로그인 성공")
-            session["userID"] = username
             return redirect(url_for('home'))  # 로그인 성공하면 메인 주소로 보내기(home바꾸기)
         else:
             print("incorrect")
-            return redirect(url_for('signin'))
+            return redirect(url_for("signin"))
     else:
         print("id not exist")
-        return redirect(url_for('signin'))
+        return redirect(url_for("signin"))
 
 
 # 회원가입 하면 처리하러 오는곳
-@app.route('/signup_data', methods=['POST'])
+@app.route("/signup_data", methods=["POST"])
 def signup_data():
-    username = request.form['username']
-    password = request.form['password']
+    username = request.form["username"]
+    password = request.form["password"]
 
     # 이미 아이디가 있는 경우
     if User.query.filter_by(username=username).first():
         print("already exist")
-        return redirect(url_for('signin'))  # 아이디가 있으니 로그인 화면으로
+        return redirect(url_for("signin"))  # 아이디가 있으니 로그인 화면으로
 
     # 아이디가 없으면 생성
     new_user = User(username=username, password=password)
     db.session.add(new_user)
     db.session.commit()
     print("회원가입 완료")
-    return redirect(url_for('signin'))  # 회원가입 후 로그인하러home으로
+    return redirect(url_for("signin"))  # 회원가입 후 로그인하러home으로
 
 
 @app.route("/game")  # 가위바위보 고르는 페이지, 모달에서 처리 했던것 처럼 값을 보냄
 def home():
     global reports  # 20240704: 전역 변수 수정 시 global를 선언해줘야한다.
     record = RPSGame.query.all()
-    record.reverse()        # DB 최근 등록 순으로 불러오기
+    record.reverse()  # DB 최근 등록 순으로 불러오기
     # 1번부터 출력할지 마지막부터 출력할지 회의
 
     if bool(record):
-        reports = {'win': record[0].win, 'lose': record[0].lose, 'draw': record[0].draw}
+        reports = {'win': record[0].win,
+                   'lose': record[0].lose, 'draw': record[0].draw}
 
     # 전역 변수 reports 읽기 및 참조
-    return render_template('index.html', record=record, reports=reports)
+    return render_template("index.html", record=record, reports=reports)
 
 @app.route(
     "/top_users/"
@@ -144,7 +130,9 @@ def top_users():
     return render_template("top_users.html", top_users=top_users)
 
 
-@app.route('/receive/data/', methods=['POST'])
+
+
+@app.route("/receive/data/", methods=["POST"])
 def get_data():
 
     today = datetime.now()
@@ -153,17 +141,24 @@ def get_data():
     result = ""
 
     if computer == user:
-        result = '무'
-        reports['draw'] += 1
-    elif rsplist[rsplist.index(user)-1] == computer:
-        result = '승'
-        reports['win'] += 1
-    elif rsplist[rsplist.index(user)-2] == computer:
-        result = '패'
-        reports['lose'] += 1
+        result = "무"
+        reports["draw"] += 1
+    elif rsplist[rsplist.index(user) - 1] == computer:
+        result = "승"
+        reports["win"] += 1
+    elif rsplist[rsplist.index(user) - 2] == computer:
+        result = "패"
+        reports["lose"] += 1
 
-    game = RPSGame(user=user, computer=computer,
-                   result=result, win=reports['win'], lose=reports['lose'], draw=reports['draw'], GameDay=today.strftime("%Y-%m-%d"))
+    game = RPSGame(
+        user=user,
+        computer=computer,
+        result=result,
+        win=reports["win"],
+        lose=reports["lose"],
+        draw=reports["draw"],
+        GameDay=today.strftime("%Y-%m-%d"),
+    )
     db.session.add(game)
     db.session.commit()
 

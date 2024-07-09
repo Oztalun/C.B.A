@@ -93,19 +93,16 @@
                                 <tr>
                                     <th scope="col" width="10%">#</th>
                                     <th scope="col" width="20%">사용자 ID</th>
-                                    <th scope="col" width="20%">사용자</th>
                                     <th scope="col" width="15%">승</th>
                                     <th scope="col" width="15%">패</th>
                                     <th scope="col" width="15%">무</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for user in top_users %}
+                                 {% for user in top_users %}  <!-- app.py 참고 -->
                                 <tr>
                                     <th scope="row">{{ loop.index }}</th>
-                                    <td>{{ user.id }}</td>
                                     <td>{{ user.username }}</td>
-                                    <td>{{ user.user }}</td>
                                     <td>{{ user.win }}</td>
                                     <td>{{ user.lose }}</td>
                                     <td>{{ user.draw }}</td>

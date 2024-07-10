@@ -32,7 +32,7 @@ class User(db.Model):
     password = db.Column(db.String(100), primary_key=False)
 
 
-class ranking(db.Model):
+class Ranking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), primary_key=False)
     win = db.Column(db.Integer, primary_key=False)
@@ -78,7 +78,7 @@ def signup():
 
 
 # 로그인 하면 처리하러 오는곳
-@app.route("/signin_data", methods=["POST"])
+@app.route("/signin-data", methods=["POST"])
 def signin_data():
     username = request.form["username"]
     password = request.form["password"]
@@ -100,7 +100,7 @@ def signin_data():
 
 
 # 회원가입 하면 처리하러 오는곳
-@app.route("/signup_data", methods=["POST"])
+@app.route("/signup-data", methods=["POST"])
 def signup_data():
     username = request.form["username"]
     password = request.form["password"]
@@ -112,7 +112,7 @@ def signup_data():
 
     # 아이디가 없으면 생성
     new_user = User(username=username, password=password)
-    userReports = ranking(username=username, win=0, lose=0, draw=0)
+    userReports = Ranking(username=username, win=0, lose=0, draw=0)
     db.session.add(userReports)
     db.session.add(new_user)
     db.session.commit()
@@ -136,10 +136,10 @@ def home():
     record = RPSGame.query.filter_by(username=session["userID"]).all()
     # record.reverse()  # DB 최근 등록 순으로 불러오기
     # 1번부터 출력할지 마지막부터 출력할지 회의
-    reports = ranking.query.filter_by(username=session["userID"]).first()
+    reports = Ranking.query.filter_by(username=session["userID"]).first()
     rankList = top_users()
     # 전역 변수 reports 읽기 및 참조
-    return render_template("index.html", record=record, reports=reports, ranking=rankList, user=session["userID"])
+    return render_template("index.html", record=record, reports=reports, Ranking=rankList, user=session["userID"])
 
 
 # @app.route('/receive/data/', methods=['POST'])
@@ -149,8 +149,8 @@ def home():
 def top_users():
     # 많이 승리한 사용자 순으로 정렬하며 동점자의 경우 적게 패배한 사용자가 높이 랭킹.
     top_users = (
-        ranking.query.order_by(
-            ranking.win.desc(), ranking.lose.asc()).limit(10).all()
+        Ranking.query.order_by(
+            Ranking.win.desc(), Ranking.lose.asc()).limit(10).all()
     )
     return top_users
 
@@ -163,9 +163,9 @@ def get_data():
     computer = request.form.get("ComputerVal")
     result = ""
 
-    userReports = ranking.query.filter_by(username=session["userID"]).first()
+    userReports = Ranking.query.filter_by(username=session["userID"]).first()
     if not userReports:  # 첫판이면
-        userReports = ranking(username=session["userID"],
+        userReports = Ranking(username=session["userID"],
                               win=0, lose=0, draw=0)
 
     if computer == user:

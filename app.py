@@ -48,8 +48,10 @@ rsplist = ['가위', '바위', '보']  # 가위바위보 양식 맞는지 비교
 
 @app.route("/")
 def view():
-    return 'mainpage<a href="/signin">로그인</a><br><a href="/signup">회원가입</a>'  # html제작 필요
-
+    if "userID" in session:
+        return render_template("main.html", user=session["userID"], data=True)
+    return render_template("main.html", data=False)
+    # 'mainpage<a href="/signin">로그인</a><br><a href="/signup">회원가입</a>'  # html제작 필요
 
 @app.route("/test")
 def test():
@@ -62,13 +64,16 @@ def test():
 # 로그인 폼
 @app.route("/signin")
 def signin():
+    if "userID" in session:
+        print("exist")
+        return redirect(url_for("view"))
     return render_template("signin.html")
 
 # 회원가입 폼
 
 
 @app.route('/signup')
-def signupweb():
+def signup():
     return render_template("signup.html")
 
 
@@ -85,7 +90,7 @@ def signin_data():
         if id.password == password:
             print("로그인 성공")
             session["userID"] = username
-            return redirect(url_for('home'))  # 로그인 성공하면 메인 주소로 보내기(home바꾸기)
+            return redirect(url_for('view'))
         else:
             print("incorrect")
             return redirect(url_for("signin"))
@@ -125,16 +130,16 @@ def signout():
 
 @app.route("/game")  # 가위바위보 고르는 페이지, 모달에서 처리 했던것 처럼 값을 보냄
 def home():
-    print(session["userID"])
     if "userID" not in session:
         return redirect(url_for("view"))
+    print(session["userID"])
     record = RPSGame.query.filter_by(username=session["userID"]).all()
     # record.reverse()  # DB 최근 등록 순으로 불러오기
     # 1번부터 출력할지 마지막부터 출력할지 회의
     reports = ranking.query.filter_by(username=session["userID"]).first()
     rankList = top_users()
     # 전역 변수 reports 읽기 및 참조
-    return render_template("index.html", record=record, reports=reports, ranking=rankList)
+    return render_template("index.html", record=record, reports=reports, ranking=rankList, user=session["userID"])
 
 
 # @app.route('/receive/data/', methods=['POST'])

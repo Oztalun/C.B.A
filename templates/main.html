@@ -1,11 +1,326 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>main</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메인 소개 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <style>
+        body {
+            background-image: url("https://p4.wallpaperbetter.com/wallpaper/1023/370/544/dark-landscape-lake-hd-wallpaper-preview.jpg");
+            background-position: center;
+            background-size: cover;
+            color: white;
+        }
+
+        /* .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        } */
+
+        .weather {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            /* Flex 안의 아이템들을 세로 방향으로 배치합니다. */
+            justify-content: center;
+            /* 주축 방향으로 가운데 정렬합니다. */
+            align-items: center;
+            /* 교차축 방향으로 가운데 정렬합니다. */
+            height: 100vh;
+            text-align: center;
+        }
+
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            padding: 20px 0;
+        }
+
+        .greeting {
+            margin-bottom: 50px;
+        }
+
+        .motto {
+            margin-bottom: 100px;
+        }
+
+        .logo {
+            height: 32px;
+            margin-left: 30px;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .mottobox {
+            display: flex;
+            width: 100%;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            background-color: transparent;
+            padding: 16px 16px 16px 12px;
+            color: rgba(255, 255, 255, 0.81);
+        }
+
+        .outer_mottobox {
+            display: flex;
+            width: 100%;
+            background-color: transparent;
+            padding: 16px 16px 16px 12px;
+            color: rgba(255, 255, 255, 0.81);
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
+
 <body>
-    
+    <!-- music의 navbar -->
+    <nav class="navbar border-bottom border-bottom-dark d-flex justify-content-space-between" data-bs-theme="dark">
+        <div class="navbar navbar-expand-lg" style="padding-right: 50px;"><!--style은 home, introduce 버튼을 가운데로 옮기기 위해서-->
+            <a href="https://nbcamp.spartacodingclub.kr/" style="padding-left: 20px; padding-right: 10px; "><img
+                    src="https://s3.ap-northeast-2.amazonaws.com/materials.spartacodingclub.kr/webjong/images/sparta-logo.svg"
+                    alt=""></a>
+            <a href="https://www.notion.so/teamsparta/C-B-A-832d8a170b354a9698d8b5ffbba925c3"
+                style="padding-left: 10px; margin-left: 20px;"><text class="nav-link text-white"
+                    style="height: auto;">C.B.A</text></a>
+        </div>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        {% if data %}
+                        <li class="nav-item">
+                            <text class="nav-link text-white" style="height: auto;">{{ user }}님 안녕하세요</text>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" aria-current="page"
+                                href="{{ url_for('signout')}}">signout</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link text-white" aria-current="page" href="{{ url_for('signin')}}">signin</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% if data %}
+                            {{ url_for('signup')}}
+                            {% else %}
+
+                            {% endif %}
+                            ">signup</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{{url_for('home')}}">game</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="weather">
+            <h5 id="current-time" style="padding-right: 10px;"></h5>
+            <img id="weather-icon">
+            <p id="weather-msg"></p>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="motto">
+            <div class="outer_mottobox">
+                <div class="mottobox">
+                    <div style="display: flex; flex-direction: column; min-width: 0px; margin-left: 8px; width: 100%;">
+                        <div spellcheck="false" placeholder="내용을 입력하세요" data-content-editable-leaf="true"
+                            style="max-width: 100%; width: 100%; white-space: pre-wrap; word-break: break-word; caret-color: transparent; padding-left: 2px; padding-right: 2px;"
+                            contenteditable="false"><span style="font-weight:600" data-token-index="0"
+                                class="notion-enable-hover">Ground Rules</span></div>
+                        <div data-block-id="20531d70-5d20-4852-b437-f6c9d3c8d15c"
+                            class="notion-selectable notion-code-block"
+                            style="width: 100%; max-width: 100%; margin-top: 4px; margin-bottom: 0px;">
+                            <div style="display: flex;">
+                                <div contenteditable="false" data-content-editable-void="true" role="figure"
+                                    aria-labelledby=":r1l:"
+                                    style="flex-grow: 1; border-radius: 4px; text-align: left; position: relative; background: rgba(255, 255, 255, 0.03); min-width: 0px; width: 100%;">
+                                    <div
+                                        style="position: absolute; top: 8px; left: 8px; z-index: 1; color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: flex-end; opacity: 0; transition: opacity 300ms ease-in 0s;">
+                                        <div aria-disabled="true" role="button" tabindex="-1"
+                                            style="user-select: none; transition: background 20ms ease-in 0s; cursor: default; display: inline-flex; align-items: center; white-space: nowrap; height: 20px; border-radius: 4px; font-size: 12px; line-height: 1.2; padding-left: 5px; padding-right: 5px; color: rgba(255, 255, 255, 0.443); margin-right: 5px;">
+                                            Plain Text</div>
+                                    </div>
+                                    <div
+                                        style="position: absolute; top: 3px; right: 1px; z-index: 1; color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: flex-end; height: 25px; font-size: 11.5px; opacity: 0; transition: opacity 300ms ease-in 0s;">
+                                        <div
+                                            style="color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 4px; margin-right: 4px;">
+                                            <div role="button" tabindex="0"
+                                                style="user-select: none; transition: background 20ms ease-in 0s; cursor: pointer; display: inline-flex; align-items: center; white-space: nowrap; height: 25px; border-radius: 4px 0px 0px 4px; font-size: 11.5px; line-height: 1.2; padding: 4px 6px; color: rgba(255, 255, 255, 0.81); background: rgb(37, 37, 37); font-weight: 400;">
+                                                <svg role="graphics-symbol" viewBox="0 0 14 16" class="copy"
+                                                    style="width: 16px; height: 16px; display: block; fill: inherit; flex-shrink: 0; padding-right: 4px;">
+                                                    <path
+                                                        d="M2.404 15.322h5.701c1.26 0 1.887-.662 1.887-1.927V12.38h1.154c1.254 0 1.91-.662 1.91-1.928V5.555c0-.774-.158-1.266-.626-1.74L9.512.837C9.066.387 8.545.21 7.865.21H5.463c-1.254 0-1.91.662-1.91 1.928v1.084H2.404c-1.254 0-1.91.668-1.91 1.933v8.239c0 1.265.656 1.927 1.91 1.927zm7.588-6.62c0-.792-.1-1.161-.592-1.665L6.225 3.814c-.452-.462-.844-.58-1.5-.591V2.215c0-.533.28-.832.843-.832h2.38v2.883c0 .726.386 1.113 1.107 1.113h2.83v4.998c0 .539-.276.832-.844.832H9.992V8.701zm-.79-4.29c-.206 0-.288-.088-.288-.287V1.594l2.771 2.818H9.201zM2.503 14.15c-.563 0-.844-.293-.844-.832V5.232c0-.539.281-.837.85-.837h1.91v3.187c0 .85.416 1.26 1.26 1.26h3.14v4.476c0 .54-.28.832-.843.832H2.504zM5.79 7.816c-.24 0-.346-.105-.346-.345V4.547l3.223 3.27H5.791z">
+                                                    </path>
+                                                </svg>복사
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="line-numbers notion-code-block"
+                                            style="display: flex; overflow-x: auto;">
+                                            <div spellcheck="false" autocorrect="off" autocapitalize="off"
+                                                placeholder=" " data-content-editable-leaf="true"
+                                                style="flex-grow: 1; flex-shrink: 1; text-align: left; font-family: SFMono-Regular, Menlo, Consolas, &quot;PT Mono&quot;, &quot;Liberation Mono&quot;, Courier, monospace; font-size: 85%; tab-size: 2; padding: 34px 16px 32px 32px; min-height: 1em; color: rgba(255, 255, 255, 0.81); white-space: pre;"
+                                                contenteditable="false">1. 막힐 때는 함께 해결하기<br>2. 팀원 존중해주기<br>3. 소통 활발히
+                                                하기<br>4. 팀원 간의 피드백 잘해주기
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="background: rgb(25, 25, 25); padding-right: 105px;"></div>
+                                </div>
+                                <div style="position: relative; left: 16px;"></div>​
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mottobox">
+                    <div style="display: flex; flex-direction: column; min-width: 0px; margin-left: 8px; width: 100%;">
+                        <div spellcheck="false" placeholder="내용을 입력하세요" data-content-editable-leaf="true"
+                            style="max-width: 100%; width: 100%; white-space: pre-wrap; word-break: break-word; caret-color: transparent; padding-left: 2px; padding-right: 2px;"
+                            contenteditable="false"><span style="font-weight:600" data-token-index="0"
+                                class="notion-enable-hover">Goals</span></div>
+                        <div data-block-id="d785cc9a-9465-4a7d-b396-c02f849d57e9"
+                            class="notion-selectable notion-code-block"
+                            style="width: 100%; max-width: 100%; margin-top: 4px; margin-bottom: 0px;">
+                            <div style="display: flex;">
+                                <div contenteditable="false" data-content-editable-void="true" role="figure"
+                                    aria-labelledby=":r1m:"
+                                    style="flex-grow: 1; border-radius: 4px; text-align: left; position: relative; background: rgba(255, 255, 255, 0.03); min-width: 0px; width: 100%;">
+                                    <div
+                                        style="position: absolute; top: 8px; left: 8px; z-index: 1; color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: flex-end; opacity: 0; transition: opacity 300ms ease-in 0s;">
+                                        <div aria-disabled="true" role="button" tabindex="-1"
+                                            style="user-select: none; transition: background 20ms ease-in 0s; cursor: default; display: inline-flex; align-items: center; white-space: nowrap; height: 20px; border-radius: 4px; font-size: 12px; line-height: 1.2; padding-left: 5px; padding-right: 5px; color: rgba(255, 255, 255, 0.443); margin-right: 5px;">
+                                            Plain Text</div>
+                                    </div>
+                                    <div
+                                        style="position: absolute; top: 3px; right: 1px; z-index: 1; color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: flex-end; height: 25px; font-size: 11.5px; opacity: 0; transition: opacity 300ms ease-in 0s;">
+                                        <div
+                                            style="color: rgba(255, 255, 255, 0.443); display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 4px; margin-right: 4px;">
+                                            <div role="button" tabindex="0"
+                                                style="user-select: none; transition: background 20ms ease-in 0s; cursor: pointer; display: inline-flex; align-items: center; white-space: nowrap; height: 25px; border-radius: 4px 0px 0px 4px; font-size: 11.5px; line-height: 1.2; padding: 4px 6px; color: rgba(255, 255, 255, 0.81); background: rgb(37, 37, 37); font-weight: 400;">
+                                                <svg role="graphics-symbol" viewBox="0 0 14 16" class="copy"
+                                                    style="width: 16px; height: 16px; display: block; fill: inherit; flex-shrink: 0; padding-right: 4px;">
+                                                    <path
+                                                        d="M2.404 15.322h5.701c1.26 0 1.887-.662 1.887-1.927V12.38h1.154c1.254 0 1.91-.662 1.91-1.928V5.555c0-.774-.158-1.266-.626-1.74L9.512.837C9.066.387 8.545.21 7.865.21H5.463c-1.254 0-1.91.662-1.91 1.928v1.084H2.404c-1.254 0-1.91.668-1.91 1.933v8.239c0 1.265.656 1.927 1.91 1.927zm7.588-6.62c0-.792-.1-1.161-.592-1.665L6.225 3.814c-.452-.462-.844-.58-1.5-.591V2.215c0-.533.28-.832.843-.832h2.38v2.883c0 .726.386 1.113 1.107 1.113h2.83v4.998c0 .539-.276.832-.844.832H9.992V8.701zm-.79-4.29c-.206 0-.288-.088-.288-.287V1.594l2.771 2.818H9.201zM2.503 14.15c-.563 0-.844-.293-.844-.832V5.232c0-.539.281-.837.85-.837h1.91v3.187c0 .85.416 1.26 1.26 1.26h3.14v4.476c0 .54-.28.832-.843.832H2.504zM5.79 7.816c-.24 0-.346-.105-.346-.345V4.547l3.223 3.27H5.791z">
+                                                    </path>
+                                                </svg>복사
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="line-numbers notion-code-block"
+                                            style="display: flex; overflow-x: auto;">
+                                            <div spellcheck="false" autocorrect="off" autocapitalize="off"
+                                                placeholder=" " data-content-editable-leaf="true"
+                                                style="flex-grow: 1; flex-shrink: 1; text-align: left; font-family: SFMono-Regular, Menlo, Consolas, &quot;PT Mono&quot;, &quot;Liberation Mono&quot;, Courier, monospace; font-size: 85%; tab-size: 2; padding: 34px 16px 32px 32px; min-height: 1em; color: rgba(255, 255, 255, 0.81); white-space: pre;"
+                                                contenteditable="false">1. 모든 팀 과제 완료<br>2. 파이썬 완강<br><br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="background: rgb(25, 25, 25); padding-right: 105px;"></div>
+                                </div>
+                                <div style="position: relative; left: 16px;"></div>​
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p id="">C.B.A</p>
+        <p id="">Coding Base Academy</p>
+    </div>
+
+    <script>
+        function displayCurrentTime() {
+            var currentTime = new Date();
+            var hours = currentTime.getHours();
+            var minutes = currentTime.getMinutes();
+            var seconds = currentTime.getSeconds();
+
+            // AM 또는 PM 설정
+            var meridiem = hours >= 12 ? "PM" : "AM";
+
+            // 시간이 12를 넘어가면 12로 나눠서 표시
+            hours = hours > 12 ? hours - 12 : hours;
+
+            // 0을 붙여 한 자리 숫자를 두 자리로 만듦
+            hours = addLeadingZero(hours);
+            minutes = addLeadingZero(minutes);
+            seconds = addLeadingZero(seconds);
+
+            // 시간을 HTML 요소에 표시
+            var timeString = hours + ":" + minutes + ":" + seconds + " " + meridiem;
+            document.getElementById("current-time").innerHTML = timeString;
+        }
+
+        function addLeadingZero(number) {
+            return number < 10 ? "0" + number : number;
+        }
+
+        // 1초마다 시간을 업데이트
+        setInterval(displayCurrentTime, 1000);
+
+        let url = "https://api.quotable.io/random";
+        fetch(url).then(res => res.json()).then(data => {
+            console.log(data);
+            let author = data['author']
+            let content = data['content']
+
+            let authorMsg = `- ${author} -`
+            let contentMsg = `" ${content} "`
+
+            $('#quoteAuthor').text(authorMsg)
+            $('#quoteContent').text(contentMsg)
+
+        })
+        let weather_url = "http://spartacodingclub.shop/sparta_api/weather/seoul";
+        fetch(weather_url)
+            .then(res => res.json())
+            .then(data => {
+                // console.log(data);
+                let temp = data['temp']
+                let icon_url = data['icon']
+
+                let message = `${temp}ºC`
+                $('#weather-msg').text(message)
+                $('#weather-icon').attr('src', icon_url)
+
+            })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
